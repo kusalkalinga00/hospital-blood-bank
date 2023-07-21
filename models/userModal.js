@@ -5,12 +5,12 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       required: [true, "role is required"],
-      enum: ["admin", "organization", "user", "hospital"],
+      enum: ["admin", "organization", "donor", "hospital"],
     },
     name: {
       type: String,
       required: function () {
-        if (this.role === "user" || this.role === "admin") {
+        if (this.role === "donor" || this.role === "admin") {
           return true;
         }
         return false;
@@ -60,4 +60,4 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("users", userSchema);

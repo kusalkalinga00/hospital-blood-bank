@@ -26,6 +26,9 @@ app.use("/api/v1/test", require("./routes/testRoutes"));
 //register POST route
 app.use("/api/v1/auth", require("./routes/authRoutes"));
 
+//inventory routes
+app.use("/api/v1/inventory", require("./routes/inventoryRoutes"));
+
 
 //port
 const PORT = process.env.PORT || 8080;
