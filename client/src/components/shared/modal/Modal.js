@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputType from "./../form/InputType";
 import API from "./../../../services/API";
 import { useSelector } from "react-redux";
@@ -33,6 +33,7 @@ const Modal = () => {
         window.location.reload();
       }
     } catch (error) {
+      alert(error.response.data.message);
       window.location.reload();
       console.log(error);
     }
@@ -83,7 +84,6 @@ const Modal = () => {
                     type="radio"
                     name="inRadio"
                     className="form-check-input"
-                    defaultChecked
                     value={"out"}
                     onChange={(e) => setInventoryType(e.target.value)}
                   />

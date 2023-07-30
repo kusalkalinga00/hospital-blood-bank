@@ -1,6 +1,7 @@
 //CREATE INVENTORY
 const userModal = require("../models/userModal");
 const inventoryModal = require("../models/inventoryModal");
+const mongoose = require("mongoose");
 
 const createInventoryController = async (req, res) => {
   try {
@@ -17,8 +18,69 @@ const createInventoryController = async (req, res) => {
     //   throw new Error("User is not a donor");
     // }
 
-    if (inventoryType === "out" && user.role !== "hospital") {
-      throw new Error("User is not a hospital");
+    // if (inventoryType === "out" && user.role !== "hospital") {
+    //   throw new Error("User is not a hospital");
+    // }
+
+    if (req.body.inventoryType === "out") {
+      const requestedBloodGroup = req.body.bloodGroup;
+      const requestedQuantityOfBlood = req.body.quantity;
+      const organization = new mongoose.Types.ObjectId(req.body.userId);
+
+      //calculate total quantity of blood
+      const totalInOfRequestedBloodQuantity = await inventoryModal.aggregate([
+        {
+          $match: {
+            organization,
+            inventoryType: "in",
+            bloodGroup: requestedBloodGroup,
+          },
+        },
+        {
+          $group: {
+            _id: "$bloodGroup",
+            total: {
+              $sum: "$quantity",
+            },
+          },
+        },
+      ]);
+      //console.log("Total in ", totalInOfRequestedBloodQuantity);
+      const totalIn = totalInOfRequestedBloodQuantity[0]?.total || 0;
+
+      //calculate out quantity of blood
+
+      const totalOutOfRequestedBloodGroup = await inventoryModal.aggregate([
+        {
+          $match: {
+            organization,
+            inventoryType: "out",
+            bloodGroup: requestedBloodGroup,
+          },
+        },
+        {
+          $group: {
+            _id: "$bloodGroup",
+            total: {
+              $sum: "$quantity",
+            },
+          },
+        },
+      ]);
+
+      const totalOut = totalOutOfRequestedBloodGroup[0]?.total || 0;
+
+      //in and out
+      const availabeQuanityOfBloodGroup = totalIn - totalOut;
+
+      //validation
+      if (availabeQuanityOfBloodGroup < requestedQuantityOfBlood) {
+        return res.status(500).send({
+          success: false,
+          message: `only ${availabeQuanityOfBloodGroup} unit of ${requestedBloodGroup.toUpperCase()} is available`,
+        });
+      }
+      req.body.hospital = req.body.userId;
     }
 
     //save record
