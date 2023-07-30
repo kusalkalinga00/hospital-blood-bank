@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 const Modal = () => {
   const [inventoryType, setInventoryType] = useState("in");
   const [bloodGroup, setBloodGroup] = useState("");
-  const [donorEmail, setDonorEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [quantity, setQuantity] = useState(0);
   // const [organization, setOrganization] = useState("");
   // const [hospital, setHospital] = useState("");
@@ -23,9 +23,8 @@ const Modal = () => {
       const { data } = await API.post("/inventory/create-inventory", {
         inventoryType,
         bloodGroup,
-        donorEmail,
         quantity,
-        email: user?.email,
+        email,
         organization: user?._id,
       });
       if (data?.success) {
@@ -112,8 +111,8 @@ const Modal = () => {
                 labelText={"Donor Email"}
                 labelFor={"donorEmail"}
                 inputType={"email"}
-                value={donorEmail}
-                onChange={(e) => setDonorEmail(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 name={"donorEmail"}
               />
               <InputType

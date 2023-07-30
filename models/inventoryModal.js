@@ -12,7 +12,7 @@ const inventorySchema = new mongoose.Schema(
       required: [true, "blood group is required"],
       enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
     },
-    donorEmail: {
+    email: {
       type: String,
       required: [true, "donor email is required"],
     },
@@ -35,9 +35,9 @@ const inventorySchema = new mongoose.Schema(
     donor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
-      // required: function () {
-      //   return this.inventoryType === "in";
-      // },
+      required: function () {
+        return this.inventoryType === "in";
+      },
     },
   },
   { timestamps: true }

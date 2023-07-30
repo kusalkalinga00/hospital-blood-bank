@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import PublicRoute from "./components/routes/PublicRoute";
+import Donar from "./pages/Dashboard/Donar";
 
 function App() {
   return (
@@ -35,6 +36,15 @@ function App() {
             <PublicRoute>
               <Register />
             </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/donar"
+          element={
+            <ProtectedRoute>
+              <Donar />
+            </ProtectedRoute>
           }
         />
       </Routes>

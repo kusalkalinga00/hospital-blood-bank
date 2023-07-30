@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 
 const createInventoryController = async (req, res) => {
   try {
-    const { email, inventoryType } = req.body;
+    const { email } = req.body;
 
     //validation
     const user = await userModal.findOne({ email });
@@ -80,7 +80,9 @@ const createInventoryController = async (req, res) => {
           message: `only ${availabeQuanityOfBloodGroup} unit of ${requestedBloodGroup.toUpperCase()} is available`,
         });
       }
-      req.body.hospital = req.body.userId;
+      req.body.hospital = user?._id;
+    } else {
+      req.body.donor = user?._id;
     }
 
     //save record
@@ -127,4 +129,14 @@ const getInventoryController = async (req, res) => {
   }
 };
 
-module.exports = { createInventoryController, getInventoryController };
+//GET DONAR RECORDS || GET
+
+const getDonarsController = async (req, res) => {
+
+};
+
+module.exports = {
+  createInventoryController,
+  getInventoryController,
+  getDonarsController,
+};
