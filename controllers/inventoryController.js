@@ -132,11 +132,72 @@ const getInventoryController = async (req, res) => {
 //GET DONAR RECORDS || GET
 
 const getDonarsController = async (req, res) => {
+  try {
+    const organization = req.body.userId;
 
+    //find all donors
+    const donorsId = await inventoryModal.distinct("donor", {
+      organization,
+    });
+    //console.log(donorsId);
+
+    const donors = await userModal.find({
+      _id: {
+        $in: donorsId,
+      },
+    });
+
+    return res.status(200).send({
+      success: true,
+      message: "get all donars successfully",
+      donors,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "Error in GET ALL Donar API",
+      error,
+    });
+  }
+};
+
+//GET HOSPITAL RECORDS || GET
+
+const getHospitalsController = async (req, res) => {
+  try {
+    const organization = req.body.userId;
+
+    //GET hospital id
+    const hospitalId = await inventoryModal.distinct("hospital", {
+      organization,
+    });
+    //find hospital
+    const hospitals = await userModal.find({
+      _id: {
+        $in: hospitalId,
+      },
+    });
+
+    console.log(organization, hospitalId);
+    return res.status(200).send({
+      success: true,
+      message: "get all hospitals successfully",
+      hospitals,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "Error in GET ALL Hospital API",
+      error,
+    });
+  }
 };
 
 module.exports = {
   createInventoryController,
   getInventoryController,
   getDonarsController,
+  getHospitalsController,
 };
